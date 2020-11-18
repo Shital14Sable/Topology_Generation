@@ -17,7 +17,7 @@ load('Test') %Variable number for the test iteration
 Test = Test-1;
 % date_yes = char(datetime(2020,10,09));
 thruster_test = 'RIT_XT';
-folder_name = ['C:\Users\sables\Box\Simulation\OSU-DSPG\particleTest\Topology_Generation_Data\Test_Data\' thruster_test];
+folder_name = ['C:\Users\shita\Box\Simulation\OSU-DSPG\particleTest\Topology_Generation_Data\Test_Data\' thruster_test];
 %-------------------------------------------------------------------------%
 qi = 100;
 e_charge = 1.602e-19;
