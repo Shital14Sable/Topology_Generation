@@ -4,7 +4,7 @@ clear
 
 load('Test') %Variable number for the test iteration'
 
-Test = 6;
+Test = 10;
 thruster_test = 'RIT_XT';
 folder_name = ['C:\Users\shita\Box\Simulation\OSU-DSPG\particleTest\Topology_Generation_Data\Test_Data\' thruster_test]; %change the location according to where you are running the test
 % SG_data = round(table2array(readtable([folder_name '\Test' num2str(Test) '_Grid_points.xlsx'], 'Sheet', 1, 'Range','C1:G3'))); 
@@ -13,28 +13,21 @@ folder_name = ['C:\Users\shita\Box\Simulation\OSU-DSPG\particleTest\Topology_Gen
 % 
 % [h,xn,yn] = CircleSegment(pt1,pt2);
 % size_mat = size(yn, 2);
-% Test = 6;
+
+
+V = csvread([folder_name '\Test' num2str(Test) '_VtgDistMat.csv']);
 NPos_x = csvread([folder_name '\Test' num2str(Test) 'NPos_x.csv']);  
 % NPos_x = reshape(NPos_x,[size(NPos_x,1)/size_mat, size_mat])'; 
 NPos_y = csvread([folder_name '\Test' num2str(Test) 'NPos_y.csv']);
 % NPos_y = reshape(NPos_y,[size(NPos_y,1)/size_mat, size_mat])';
 
-
-V = csvread([folder_name '\Test' num2str(Test) '_VtgDistMat.csv']);
-
 % size1 = 6*10e-3/size(V, 1); % this variable is needed for interpolation, it is the grid size (e.g. 0.1 m)
 
 Nx = size(V,1);
 Ny  = size(V,2);
-Ex = zeros(Nx,Ny);
-Ey = zeros(Nx,Ny);
+Ex = csvread([folder_name '\Test' num2str(Test) 'Ex.csv']);
+Ey = csvread([folder_name '\Test' num2str(Test) 'Ey.csv']);
 
-for i = 3:Nx-2
-    for j = 3:Ny-2
-    Ex(i,j) = -(-V(i, j+2) + 8*V(i,j+1) - 8*V(i,j-1) + V(i,j-2))/12;
-    Ey(i,j) = -(-V(i+2, j) + 8*V(i+1,j) - 8*V(i-1,j) + V(i-2,j))/12;
-    end
-end
 
 p_dim = size(NPos_x, 1);
 pos_cellX = {};
@@ -45,6 +38,7 @@ for s = 1:p_dim
 end
 
 % Electric field Magnitude
+
 E = sqrt(Ex.^2+Ey.^2);
  
 x = (1:Ny);

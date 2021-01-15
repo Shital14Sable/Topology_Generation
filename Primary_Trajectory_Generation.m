@@ -14,18 +14,21 @@ clear all
 %                           LOADING THE INPUT FILES
 %-------------------------------------------------------------------------%
 load('Test') %Variable number for the test iteration
-Test = Test-1;
+disp(Test)
+Test = 15;
 % date_yes = char(datetime(2020,10,09));
 thruster_test = 'RIT_XT';
 folder_name = ['C:\Users\shita\Box\Simulation\OSU-DSPG\particleTest\Topology_Generation_Data\Test_Data\' thruster_test];
+% Azara's Local Directory for Simulation
+% folder_name = ['C:\Users\azara\Box Sync\Ion Thruster Research\Clone\' thruster_test];
 %-------------------------------------------------------------------------%
 qi = 100;
 e_charge = 1.602e-19;
 eps = 8.854e-12;
 m_Xe = 2.1801714e-25; %kg
 f_bohm = 1;
-v_bohm = f_bohm * sqrt(100* 1.60217662e-19 *3/(100 * 2.18017e-25));
-
+% v_bohm = f_bohm * sqrt(100* 1.60217662e-19 *3/(100 * 2.18017e-25));
+v_bohm = 0;
 
 V = csvread([folder_name '\Test' num2str(Test) '_VtgDistMat.csv']);
 GR_Data =  round(table2array(readtable(['Input_Data\Grid_parameter_' thruster_test '.xlsx'], 'Range','B11:B12' )));
@@ -50,7 +53,7 @@ E = sqrt(Ex.^2+Ey.^2);
 x = (1:Ny);
 y = (1:Nx);
 
-Nj = 600;
+Nj = 6000;
 %-------------------------------------------------------------------------%
 %                       Positon Simulation
 %-------------------------------------------------------------------------%
@@ -58,11 +61,14 @@ Nj = 600;
 % yn = SG_data(1,3)+1 : SG_data(2,1)-1; % Initial Y position
 
 
-pt1 = [SG_data(1,2),SG_data(1,3)+1];
-pt2 = [SG_data(1,2),SG_data(2,1)-1];
+pt1 = [SG_data(1,2) + 2,SG_data(1,3)+1];
+pt2 = [SG_data(1,2) + 2,SG_data(2,1)-1];
 
 [h,xn,yn] = CircleSegment(pt1,pt2);
+% xn = 35;
+% yn = 110;
 size_mat = size(yn, 2);
+
 
 NPos_x = zeros(size_mat,Nj); % X position matrix to multiple trajectories
 NPos_y = zeros(size_mat,Nj); % Y position matrix to multiple trajectories
@@ -77,13 +83,13 @@ Vy_new = zeros(size_mat,Nj);
 for itr = 1:size(yn, 2)
     [NPos_x(itr,:), NPos_y(itr,:), Vx_new(itr, :), Vy_new(itr, :),  time_step(itr,:)] = Path_Calculation(xn(1,itr), yn(1,itr), Ex, Ey, Vx_in, Vy_in, Nj);
 end
-p_dim = size(NPos_x, 1);
-pos_cellX = {};
-pos_cellY = {};
+% p_dim = size(NPos_x, 1);
+% pos_cellX = {};
+% pos_cellY = {};
 
-for s = 1:p_dim
-    [pos_cellX{s}, pos_cellY{s}] = Post_process(NPos_x(s,:), NPos_y(s,:));
-end
+% for s = 1:p_dim
+%     [pos_cellX{s}, pos_cellY{s}] = Post_process(NPos_x(s,:), NPos_y(s,:));
+% end
 
 %-------------------------------------------------------------------------%
 %                        SAVING THE TRAJECTORIES
@@ -91,15 +97,21 @@ end
 
 
 if isfolder(folder_name)
+    writematrix(Ex, [folder_name '\Test' num2str(Test) 'Ex.csv'])
+    writematrix(Ey, [folder_name '\Test' num2str(Test) 'Ey.csv'])
     writematrix(NPos_x, [folder_name '\Test' num2str(Test) 'NPos_x.csv'])  % writes the generated Trajectory matrix to a given name
     writematrix(NPos_y, [folder_name '\Test' num2str(Test) 'NPos_y.csv'])  % writes the generated Trajectory matrix to a given name
     writematrix(time_step, [folder_name '\Test' num2str(Test) 'TimeStep.csv'])  % writes the generated Time Step matrix to a given name
     writematrix(Vx_new, [folder_name '\Test' num2str(Test) 'Vx.csv'])  % writes the generated Velocity matrix to a given name
 else
     mkdir(fullfile(folder_name))
+    writematrix(Ex, [folder_name '\Test' num2str(Test) 'Ex.csv'])
+    writematrix(Ey, [folder_name '\Test' num2str(Test) 'Ey.csv'])
     writematrix(NPos_x, [folder_name '\Test' num2str(Test) 'NPos_x.csv']) % writes the generated Trajectory matrix to a given name
     writematrix(NPos_y, [folder_name '\Test' num2str(Test) 'NPos_y.csv'])  % writes the generated Trajectory matrix to a given name
     writematrix(time_step, [folder_name '\Test' num2str(Test) 'TimeStep.csv'])  % writes the generated Time Step matrix to a given name
     writematrix(Vx_new, [folder_name '\Test' num2str(Test) 'Vx.csv'])  % writes the generated Velocity matrix to a given name
 end
+
+
 

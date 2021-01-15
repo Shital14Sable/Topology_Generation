@@ -1,23 +1,18 @@
 clc
 clear
 %-------------------------------------------------------------------------%
-%                         INITIALIZATION    
-%-------------------------------------------------------------------------%
-% E = Total electric field matrix using Poisson's equation
-% V = Potential matrix
-% Nx = Number of grid points in X- direction
-% Ny = Number of grid points in Y-Direction
-%-------------------------------------------------------------------------%
-% Enter the dimensions
-% File_name = xyz;
-load('Test') %Variable number for the test iteration
+load('Test') % Variable number for the test iteration
+Test = Test + 1;
+thruster_test = 'RIT_XT'; %Name of the thruster to test
 
-thruster_test = 'RIT_XT';
+Input_params = table2array(readtable(['Input_Data\Grid_parameter_' thruster_test '.xlsx'], 'Range','B1:B14')); %Input Parameters for the thruster 
+Input_params(8,1) = 900;
+Input_params(9,1) = -300;
 
-Input_params = table2array(readtable(['Input_Data\Grid_parameter_' thruster_test '.xlsx'], 'Range','B1:B14'));
-Data_conversion(Input_params', thruster_test);
+folder_name = ['C:\Users\shita\Box\Simulation\OSU-DSPG\particleTest\Topology_Generation_Data\Test_Data\' thruster_test]; %Path to save the 
+                                                                                                                         %generated data
+Data_conversion(Input_params', Test) %This script converts the 
 
-folder_name = ['C:\Users\sables\Box\Simulation\OSU-DSPG\particleTest\Topology_Generation_Data\Test_Data\' thruster_test];
 SG_data = round(table2array(readtable([folder_name '\Test' num2str(Test) '_Grid_points.xlsx'], 'Sheet', 1, 'Range','C1:G3'))); 
 AG_data = round(table2array(readtable([folder_name '\Test' num2str(Test) '_Grid_points.xlsx'], 'Sheet', 2, 'Range','C1:G3')));
 
@@ -89,7 +84,7 @@ for itr = 1:300
     end
 end
 toc
-Test = Test +1;
+
 if isfolder(folder_name)
     writematrix(V_m, [folder_name '\Test' num2str(Test) '_VtgDistMat.csv'])  % writes the generated voltage matrix to a given name
 else
@@ -97,7 +92,7 @@ else
     writematrix(V_m, [folder_name '\Test' num2str(Test) '_VtgDistMat.csv']) % writes the generated voltage matrix to a given name
 end
 
-
+% Test = Test +1;
 save('Test', "Test")
 
 % A = gradient(V_m); % Gradient Matrix
