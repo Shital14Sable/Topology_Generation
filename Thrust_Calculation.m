@@ -4,7 +4,7 @@
 clc
 clear all
 % load('Test') %Variable number for the test iteration'
-Test = 15;
+Test = 10;
 thruster_test = 'RIT_XT';
 folder_name = ['C:\Users\shita\Box\Simulation\OSU-DSPG\particleTest\Topology_Generation_Data\Test_Data\' thruster_test];
 % m_dot = 1.231845e-9; %kg/s RIT10
@@ -44,8 +44,8 @@ for i = 1:size(Vb)
     end
 end
 
-vel_avg = sum(Vb_sum) ./  size(Vb_sum, 2)
+vel_avg = sum(Vb_sum) ./  size(Vb_sum, 2);
 
-thrust_total = vel_avg * m_dot
+thrust_total = vel_avg * m_dot; %total Thrust per aperture
 save([folder_name '\Test' num2str(Test) '_Thrust'], "thrust_total")
 save([folder_name '\Test' num2str(Test) '_avg_exit_velocity'], "vel_avg")

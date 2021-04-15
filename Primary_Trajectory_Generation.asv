@@ -75,7 +75,7 @@ for i = 1:apts
 end
 % xn = 35;
 % yn = 110;
-no_partcls = apts * size(yn, 2);
+no_partcls = grids * size(yn, 2);
 
 NPos_x = zeros(no_partcls ,Nj); % X position matrix to multiple trajectories
 NPos_y = zeros(no_partcls ,Nj); % Y position matrix to multiple trajectories
@@ -87,11 +87,10 @@ Vy_new = zeros(no_partcls ,Nj);
 
 
 
-part_no = 1;  %particle number
-for g = 1:apts
+
+for g = 1:grids
     for itr = 1:size(yn, 2)
-        [NPos_x(part_no,:), NPos_y(part_no ,:), Vx_new(part_no, :), Vy_new(part_no, :),  time_step(part_no,:)] = Path_Calculation(xn(g,itr), yn(g,itr), Ex, Ey, Vx_in, Vy_in, Nj);
-    part_no = part_no + 1;
+        [NPos_x(itr,:), NPos_y(itr,:), Vx_new(itr, :), Vy_new(itr, :),  time_step(itr,:)] = Path_Calculation(xn(g,itr), yn(g,itr), Ex, Ey, Vx_in, Vy_in, Nj);
     end
 end
 % p_dim = size(NPos_x, 1);

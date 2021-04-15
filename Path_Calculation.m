@@ -57,19 +57,19 @@ for z = 2:Nj   % Number of iterations
            Eyt(1,z) = Ey(yt_floor(1,z),xt_floor(1,z));
            
        else
-           Ext(1,z) = Ex(yt_floor(1,z),xt_floor(1,z)) + ((Ex(yt_ceil(1,z),xt_ceil(1,z))-Ex(yt_floor(1,z),xt_floor(1,z)))* d1/d_cell);             %(Pos_x(1,z)-xt_floor(1,z)); %Interpolation for electric field in X direction
-           Eyt(1,z) = Ey(yt_floor(1,z),xt_floor(1,z))+((Ey(yt_ceil(1,z),xt_ceil(1,z))-Ey(yt_floor(1,z),xt_floor(1,z)))*  d1/d_cell); %Interpolation for electric field in Y direction
+           Ext(1,z) = Ex(yt_floor(1,z),xt_floor(1,z)) + ((Ex(yt_ceil(1,z),xt_ceil(1,z))-Ex(yt_floor(1,z),xt_floor(1,z)))* d1/d_cell);
+           %(Pos_x(1,z)-xt_floor(1,z)); %Interpolation for electric field in X direction
+           Eyt(1,z) = Ey(yt_floor(1,z),xt_floor(1,z))+((Ey(yt_ceil(1,z),xt_ceil(1,z))-Ey(yt_floor(1,z),xt_floor(1,z)))*  d1/d_cell);
+           %Interpolation for electric field in Y direction
 
        end
        Fx(1,z) = Ext(1,z) * qi * e_charge;  %Force Calculation in X direction
+       Fy(1,z) = Eyt(1,z) * qi * e_charge;  %Force Calculation in Y direction
        
 
-       Fy(1,z) = Eyt(1,z) * qi * e_charge; %Force Calculation in Y direction
-       
 
-
-        acc_x(1,z) = (Fx(1,z)./m_Xe); %m/s^2
-        acc_y(1,z) = (Fy(1,z)./m_Xe); %m/s^2
+        acc_x(1,z) = (Fx(1,z)./m_Xe); % m/s^2
+        acc_y(1,z) = (Fy(1,z)./m_Xe); % m/s^2
         vel_x(1,z) = Vl_x + (acc_x(1,z) * del_t);
         vel_y(1,z) = Vl_y + (acc_y(1,z) * del_t);
         disp_x(1,z) = (vel_x(1,z) + (acc_x(1,z)*(del_t)))* del_t;
@@ -78,13 +78,13 @@ for z = 2:Nj   % Number of iterations
         
     
   
-        if tot_disp < min_p % This modifies the time delta so that the displacement is greater than the min allowed displacement
+        if tot_disp < min_p      %This modifies the time delta so that the displacement is greater than the min allowed displacement
              del_t = 1.10 * del_t;
              t(1, z) = t(1,z)+del_t;
              Pos_x(1,z) = Pos_x(1,z-1);
              Pos_y(1,z) = Pos_y(1,z-1);
         
-        elseif tot_disp > max_p % This modifies the time delta so that the displacement is smaller than the max allowed displacement
+        elseif tot_disp > max_p  %This modifies the time delta so that the displacement is smaller than the max allowed displacement
             del_t = 0.90 * del_t;
              t(z) = t(z)+del_t;
              Pos_x(1,z) = Pos_x(1,z-1);
@@ -95,20 +95,9 @@ for z = 2:Nj   % Number of iterations
              Vl_y =  vel_y(1,z);
              t(z) = t(z)+del_t;
              Pos_x(1,z) = Pos_x(1,z-1) +  disp_x(1,z) * 10^5;
-%              Ds_x = disp_x(1,z)
-%              Ps_x = Pos_x(1,z+1)
+
              Pos_y(1,z) = Pos_y(1,z-1) +  disp_y(1,z) * 10^5;
-%              Ps_y = Pos_y(1,z+1)
-%              Ds_y = disp_y(1,z)
              time_step(1,z) = del_t;
-             
-% 
-%              Test_ey = Eyt(1,z)
-%             test_fy = Fy(1,z)
-%             x_disp = disp_x(1,z)
-%             y_disp = disp_y(1,z)
-%             tot_disp
-%             sdj = 22;
 
         end
    end
