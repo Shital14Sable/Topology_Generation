@@ -1,43 +1,36 @@
-clc
-clear
-%-------------------------------------------------------------------------%
-load('Test') % Variable number for the test iteration
-Test = Test + 1;
-thruster_test = 'RIT_XT'; %Name of the thruster to test
+function [V_m, Grid] = Voltage_Matrix_Generation(folder_name, thrstr_data, sim_data)
 
-folder_name = ['C:\Users\shita\Box\Simulation\OSU-DSPG\particleTest\Topology_Generation_Data\Test_Data\' thruster_test]; %Path to save the 
-                                                                                                                         %generated data
-                                                                                                                         
-%% Grid Calcs Test
-apts = 5;
-grids = 3;
-voltage = [5,10,20];
-gridThick = [0.6,0.2,0.1]; %mm
-% All grids should have a different diameter
-% Have an output that contains table of vals that says how to change the
-% values for efficiency in the next simulation
-% Next sim should use new vals
-AptDiam = [0.2,0.3,0.1]; %mm
-Gap = [0.8, 0.6, 0.3]; %mm
-lengthX = 5;
-lengthY = 5;
-res = 50; % How much 1 mm is converted into. 
+%%Setting up the workspace for simulation
+thruster_test = thrstr_data.Name; %Name of the thruster to test
+folder_name = [folder_name thruster_test];
 
-[~,~] = GridCalcs2(apts,grids,gridThick,AptDiam,Gap,lengthX,lengthY,res, voltage, folder_name, Test);
+%% Set up grid Data
+apts = thrstr_data.Apt_nos;
+grids = thrstr_data.Grid_nos;
+voltage = thrstr_data.Voltage;
+gridThick = thrstr_data.GridThick; %mm
+AptDiam = thrstr_data.AptDiam; %mm
+Gap = thrstr_data.Gap; %mm
 
+%% Set up simulation data
+res = sim_data.res; % How much 1 mm is converted into. 
+Test = sim_data.Test_no;
+lengthX = sim_data.lengthX;
+lengthY = sim_data.lengthY;
+Nx = lengthX *res;
+Ny = lengthY *res;
+Ni = sim_data.Itr_no; % Number of iterations for voltage Generation
+
+%% Get grid points
+Grid = Grid_pnt_Calc(apts,grids,gridThick,AptDiam,Gap,lengthX,lengthY,res, voltage, folder_name, Test);
 
 %%
-for k = 1:grids
-    Grid{k} = round(table2array(readtable([folder_name '\Test' num2str(Test) 'Gridvals.xls'], 'Sheet', k)));
-end
+% for k = 1:grids
+%     Grid{k} = round(table2array(readtable([folder_name '\Test' num2str(Test) 'Gridvals.xls'], 'Sheet', k)));
+% end
 
-%Nx = round(Input_params(10,1)*Input_params(12,1));     % Number of X-grids
-% Ny = round(Input_params(10,1)*Input_params(11,1));     % Number of Y-grids
-
-Nx = lengthX*res;
-Ny = lengthY*res;
-Ni = 300;  % Number of iterations for voltage Generation
-V_m = zeros(Nx,Ny);   % Potential (Voltage) matrix
+%% Defining Potential (Voltage) matrix
+V_m = zeros(Nx,Ny);
 
 
 %-------------------------------------------------------------------------%
@@ -55,7 +48,7 @@ end
 %-------------------------------------------------------------------------%
 tic
 
-for itr = 1:30
+for itr = 1:Ni
     
     for i=2:Nx-1
         for j=2:Ny-1

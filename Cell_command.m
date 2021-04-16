@@ -1,10 +1,12 @@
 clc
 clear all
 fprintf('plot(');
-SG_data = round(table2array(readtable('Input_Data\Input_Data_new.xlsx', 'Sheet', 1, 'Range','C1:G3')));
-pt1 = [SG_data(1,2),SG_data(1,3)+1];
-pt2 = [SG_data(1,2),SG_data(2,1)-1];
+% SG_data = round(table2array(readtable('Input_Data\Input_Data_new.xlsx', 'Sheet', 1, 'Range','C1:G3')));
+%pt1 = [SG_data(1,2),SG_data(1,3)+1];
+%pt2 = [SG_data(1,2),SG_data(2,1)-1];
 
+pt1 = [2,2];
+pt2 = [2,100];
 [h,xn,yn] = CircleSegment(pt1,pt2);
 size_mat = size(yn, 2);
 

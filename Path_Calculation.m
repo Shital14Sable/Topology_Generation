@@ -1,9 +1,16 @@
-function [Pos_x, Pos_y, vel_x, vel_y, time_step] = Path_Calculation(x1, y1, Ex, Ey, Vx_in, Vy_in, Nj)
-qi = 1; % Intial charge on the particle e.g. single charge or a double charge
-e_charge = 1.602e-19; % amount of charge on a electron Coloumb
-m_Xe = 2.1801714e-25; %Mass of a single Xenon atom in Kg
-del_t = 1.25e-7; % Time delta in seconds
-mat_size_x = size(Ex, 1);
+function [Pos_x, Pos_y, vel_x, vel_y, time_step] = Path_Calculation(x1, y1, Ex, Ey)
+
+%%                          LOADING THE INPUT FILES: Constants Data
+sim_const = Simulation_constants;
+qi = sim_const.qi;
+e_charge = sim_const.e_charge;
+eps = sim_const.eps;
+m_Xe = sim_const.m_Xe; %kg
+f_bohm = sim_const.f_bohm;
+% v_bohm = f_bohm * sqrt(100* 1.60217662e-19 *3/(100 * 2.18017e-25));
+v_bohm = sim_const.v_bohm;
+
+%%                         Setting up Simulation Matrices
 
 acc_x = zeros(1,Nj); % Acceleration in X direction
 acc_y = zeros(1,Nj); % Acceleration in Y direction
@@ -12,8 +19,6 @@ Eyt = zeros(1,Nj); % Value of gradient for the position in Y direction
 vel_x =  zeros(1,Nj); % Velocity in X direction
 vel_y =  zeros(1,Nj); % Velocity in Y direction
 t = zeros(1,Nj); % Time matrix for all iterartion, stores time in each iteration
-
-
 Pos_x = zeros(1,Nj);  % Position in X direction
 Pos_y = zeros(1,Nj); % Position in Y direction
 time_step = zeros(1,Nj); %Matrix to save the time steps 
@@ -21,8 +26,8 @@ Pos_x(1,1) = x1; % Initial Position in X direction
 Pos_y(1,1) = y1; % Initial Position in Y direction
 min_p = 5*10e-7; %m  % Minimum position delta 
 max_p = 1*10e-6; %m  % Maximum position delta 
-Vl_x = Vx_in;  % m/s % Initial Velocity in X direction
-Vl_y = Vy_in;  % m/s % Initial Velocity in Y direction
+Vl_x = v_bohm;  % m/s % Initial Velocity in X direction
+Vl_y = 0;  % m/s % Initial Velocity in Y direction
 disp_x = zeros(1,Nj); % Storing all displacement in X direction
 disp_y = zeros(1,Nj); % Storing all displacement in Y direction
 xt_ceil = zeros(1,Nj); % Storing upper bound in X direction for interpolation
@@ -43,7 +48,6 @@ for z = 2:Nj   % Number of iterations
    Co_ordMat = [xt_ceil(1,z) yt_ceil(1,z) xt_floor(1,z) yt_floor(1,z)];
    
    if any(Co_ordMat(:) < 1) || any(Co_ordMat(:) > mat_size_x)
-%        disp('1')
        continue % This will stop the loop if the position goes beyond the size of the consideration
 
    else
@@ -58,7 +62,7 @@ for z = 2:Nj   % Number of iterations
            
        else
            Ext(1,z) = Ex(yt_floor(1,z),xt_floor(1,z)) + ((Ex(yt_ceil(1,z),xt_ceil(1,z))-Ex(yt_floor(1,z),xt_floor(1,z)))* d1/d_cell);
-           %(Pos_x(1,z)-xt_floor(1,z)); %Interpolation for electric field in X direction
+           %Interpolation for electric field in X direction
            Eyt(1,z) = Ey(yt_floor(1,z),xt_floor(1,z))+((Ey(yt_ceil(1,z),xt_ceil(1,z))-Ey(yt_floor(1,z),xt_floor(1,z)))*  d1/d_cell);
            %Interpolation for electric field in Y direction
 

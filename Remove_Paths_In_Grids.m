@@ -28,15 +28,16 @@ function [NPos_x,NPos_y] = Remove_Paths_In_Grids(NPos_x,NPos_y,grids,apts,cell_g
 %check x coord first - If x is within range, then check y data
 %Stop it comepletely if it enters the grid
 
-    for m = 1:grids %Number of grids
-        for n = 1:apts %number of apertures
+    for n = 1:apts %Number of grids
+        for m = 1:grids %number of apertures
 
             %Find the coordinates for the grids
-            gridsY1 = cell_grids{m}(n,2); %Y1
-            gridsX2 = cell_grids{m}(n,3);%X2
-            gridsY2 = cell_grids{m}(n,4); %Y2
-            gridsX3 = cell_grids{m}(n+1,1); %X3
-            gridsX4 = cell_grids{m}(n+1,3); %X4
+            gridsX1 = cell_grids{m}(n,1);                               %X1
+            gridsY1 = cell_grids{m}(n,2);                               %Y1
+            gridsX2 = cell_grids{m}(n,3);                               %X2
+            gridsY2 = cell_grids{m}(n,4);                               %Y2
+            gridsX3 = cell_grids{m}(n+1,1);                             %X3
+            gridsX4 = cell_grids{m}(n+1,3);                             %X4
 
             for i = 1:size(NPos_x,1)%Run through the number of particles
 
@@ -44,7 +45,7 @@ function [NPos_x,NPos_y] = Remove_Paths_In_Grids(NPos_x,NPos_y,grids,apts,cell_g
                 j=1;  %Start with the first positon of the particle
                 while run == 1 && j < size(NPos_x,2)%Run as long as the particle stays outside of the grids
 
-                    if NPos_x(i,j) > gridsY1 && NPos_x(i,j) < gridsY2 && NPos_y(i,j) < gridsX2 %Compare first grid values
+                    if NPos_x(i,j) > gridsY1 && NPos_x(i,j) < gridsY2 && NPos_y(i,j) < gridsX2  && NPos_y(i,j) > gridsX1 %Compare first grid values
                         for k = j:size(NPos_x,2)
                             %Make the rest of the values in the array zero
                             NPos_x(i,k) = 0;

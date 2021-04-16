@@ -1,4 +1,4 @@
-function grid_points = GridCalcs(apts,grids,gridThick,AptDiam,Gap,lengthX, lengthY,res, voltage, folder_name, Test)
+function grid_points = Grid_pnt_Calc(apts,grids,gridThick,AptDiam,Gap,lengthX, lengthY,res, voltage, folder_name, Test)
 %This function takes in specs for ion accelerator grids and apts
 %And spits out the points where the apts and grids are located
 

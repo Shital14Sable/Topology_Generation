@@ -72,3 +72,20 @@ h3=gca;
 set(h3,'fontsize',14);
 
 
+if isfolder(folder_name)
+    writematrix(Ex, [folder_name '\Test' num2str(Test) 'Ex.csv'])
+    writematrix(Ey, [folder_name '\Test' num2str(Test) 'Ey.csv'])
+    writematrix(NPos_x, [folder_name '\Test' num2str(Test) 'NPos_x.csv'])  % writes the generated Trajectory matrix to a given name
+    writematrix(NPos_y, [folder_name '\Test' num2str(Test) 'NPos_y.csv'])  % writes the generated Trajectory matrix to a given name
+    writematrix(time_step, [folder_name '\Test' num2str(Test) 'TimeStep.csv'])  % writes the generated Time Step matrix to a given name
+    writematrix(Vx_new, [folder_name '\Test' num2str(Test) 'Vx.csv'])  % writes the generated Velocity matrix to a given name
+else
+    mkdir(fullfile(folder_name))
+    writematrix(Ex, [folder_name '\Test' num2str(Test) 'Ex.csv'])
+    writematrix(Ey, [folder_name '\Test' num2str(Test) 'Ey.csv'])
+    writematrix(NPos_x, [folder_name '\Test' num2str(Test) 'NPos_x.csv']) % writes the generated Trajectory matrix to a given name
+    writematrix(NPos_y, [folder_name '\Test' num2str(Test) 'NPos_y.csv'])  % writes the generated Trajectory matrix to a given name
+    writematrix(time_step, [folder_name '\Test' num2str(Test) 'TimeStep.csv'])  % writes the generated Time Step matrix to a given name
+    writematrix(Vx_new, [folder_name '\Test' num2str(Test) 'Vx.csv'])  % writes the generated Velocity matrix to a given name
+end
+
